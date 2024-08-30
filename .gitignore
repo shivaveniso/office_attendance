@@ -1,0 +1,32 @@
+# Ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore node_modules if using Node.js
+node_modules/
+
+# Ignore environment files
+.env
+
+# Ignore IDE and OS-generated files
+.vscode/
+.DS_Store
+
+# Ignore Docker-related files
+docker-compose.override.yml
+
+# Ignore compiled assets
+public/assets/
+public/css/
+public/js/
+
+# Ignore cache and session files
+cache/
+sessions/
+
+# Ignore vendor directory if using Composer
+vendor/
+
+# Ignore any backup files
+*.bak

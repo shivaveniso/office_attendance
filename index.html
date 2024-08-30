@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+            max-width: 250px;
+            height: auto;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4e54c8;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4e54c8;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #8f94fb;
+        }
+
+        .message {
+            color: red;
+            text-align: center;
+        }
+
+        .message.success {
+            color: green;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup.active {
+            display: flex;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .calendar-day {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            margin: 2px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .calendar-day.today {
+            border: 2px solid #4e54c8;
+        }
+
+        .calendar-day.holiday {
+            background: #f8d7da;
+        }
+
+        .status-dot {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+
+        .status-dot.present {
+            background: green;
+        }
+
+        .status-dot.absent {
+            background: red;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('login-form');
+            const messageDiv = document.getElementById('message');
+
+            // Display logout success message
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('logout') === 'success') {
+                messageDiv.textContent = 'Logout successful. Please log in again.';
+                messageDiv.classList.add('success');
+            }
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const employee_id = document.querySelector('input[name="employee_id"]').value;
+                const password = document.querySelector('input[name="password"]').value;
+
+                fetch('attendance.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'login',
+                        employee_id: employee_id,
+                        password: password,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        window.location.href = data.redirect;
+                    } else {
+                        messageDiv.innerText = data.message;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+
+        function openPopup(date) {
+            document.getElementById('popup-date').innerText = date;
+            document.getElementById('popup').classList.add('active');
+        }
+
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+        }
+
+        function markAttendance() {
+            // Implement mark attendance logic
+            closePopup();
+        }
+
+        function unmarkAttendance() {
+            // Implement unmark attendance logic
+            closePopup();
+        }
+    </script>
+</head>
+<body>
+    <img src="signature.png" alt="Logo" class="logo">
+    <div class="container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <input type="text" name="employee_id" placeholder="Employee ID" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <div id="message" class="message"></div>
+        </form>
+        <button onclick="window.location.href='register.php'">Register</button>
+    </div>
+    <p>Copyright @ <b>Office Pulse</b> 2024</p>
+
+
+    <!-- Calendar Popup -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span id="popup-date"></span>
+            <button id="mark-button" onclick="markAttendance()">Mark Attendance</button>
+            <button id="unmark-button" onclick="unmarkAttendance()">Unmark Attendance</button>
+            <button onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <!-- Include your script.js file -->
+    <script src="script.js"></script>
+</body>
+</html>
+
