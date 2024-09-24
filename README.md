@@ -9,7 +9,7 @@ Before you begin, ensure you have met the following requirements:
 - **Docker**: Make sure Docker is installed on your local machine. You can download it from [here](https://www.docker.com/get-started).
 - **Docker Compose**: Docker Compose is also required. It typically comes with Docker, but you can check its installation by running `docker-compose --version`.
 
-## Getting Started
+## Getting Started.
 
 Follow these steps to set up and run the application locally:
 
